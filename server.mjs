@@ -9,7 +9,7 @@ const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset
 async function tts(text) {
   if (!process.env.OPENROUTER_API_KEY) throw new Error('OPENROUTER_API_KEY is not configured');
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method:'POST', headers:{'Authorization':`Bearer ${process.env.OPENROUTER_API_KEY}`,'Content-Type':'application/json','HTTP-Referer':'https://englishland.muveeai.com','X-Title':'小熊英语小屋'},
+    method:'POST', headers:{'Authorization':`Bearer ${process.env.OPENROUTER_API_KEY}`,'Content-Type':'application/json','HTTP-Referer':'https://englishland.muveeai.com','X-Title':'Englishland'},
     body:JSON.stringify({model:'openai/gpt-audio-mini',modalities:['audio'],audio:{voice:'alloy',format:'wav'},messages:[{role:'user',content:`Read this sentence clearly and warmly for a five-year-old English learner. Say only the sentence: ${text}`}]}),
   });
   if (!response.ok) throw new Error(`OpenRouter returned ${response.status}`);
