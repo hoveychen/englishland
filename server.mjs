@@ -10,14 +10,17 @@ async function tts(text) {
   if (!process.env.OPENROUTER_API_KEY) throw new Error('OPENROUTER_API_KEY is not configured');
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method:'POST', headers:{'Authorization':`Bearer ${process.env.OPENROUTER_API_KEY}`,'Content-Type':'application/json','HTTP-Referer':'https://englishland.muveeai.com','X-Title':'Englishland'},
-    body:JSON.stringify({model:'openai/gpt-audio-mini',modalities:['text','audio'],audio:{voice:'alloy',format:'wav'},messages:[{role:'user',content:`Read this sentence clearly and warmly for a five-year-old English learner. Say only the sentence: ${text}`}]}),
+    body:JSON.stringify({model:'openai/gpt-audio-mini',modalities:['text','audio'],audio:{voice:'alloy',format:'wav'},stream:true,messages:[{role:'user',content:`Read this sentence clearly and warmly for a five-year-old English learner. Say only the sentence: ${text}`}]}),
   });
   const raw = await response.text();
   if (!response.ok) throw new Error(`OpenRouter returned ${response.status}: ${raw.slice(0,300)}`);
-  const data = JSON.parse(raw);
-  const audio = data?.choices?.[0]?.message?.audio?.data;
-  if (!audio) throw new Error('OpenRouter response did not contain audio');
-  return Buffer.from(audio,'base64');
+  const chunks=[];
+  for(const line of raw.split(/\r?\n/)){
+    if(!line.startsWith('data:')||line.includes('[DONE]')) continue;
+    try{const item=JSON.parse(line.slice(5).trim());const audio=item?.choices?.[0]?.delta?.audio?.data||item?.choices?.[0]?.message?.audio?.data;if(audio)chunks.push(Buffer.from(audio,'base64'))}catch{}
+  }
+  if(!chunks.length) throw new Error('OpenRouter response did not contain audio');
+  return Buffer.concat(chunks);
 }
 
 createServer(async (req,res)=>{
