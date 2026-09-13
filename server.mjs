@@ -10,7 +10,7 @@ async function tts(text) {
   if (!process.env.OPENROUTER_API_KEY) throw new Error('OPENROUTER_API_KEY is not configured');
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method:'POST', headers:{'Authorization':`Bearer ${process.env.OPENROUTER_API_KEY}`,'Content-Type':'application/json','HTTP-Referer':'https://englishland.muveeai.com','X-Title':'Englishland'},
-    body:JSON.stringify({model:'openai/gpt-audio-mini',modalities:['text','audio'],audio:{voice:'alloy',format:'wav'},stream:true,messages:[{role:'user',content:`Read this sentence clearly and warmly for a five-year-old English learner. Say only the sentence: ${text}`}]}),
+    body:JSON.stringify({model:'openai/gpt-audio-mini',modalities:['text','audio'],audio:{voice:'alloy',format:'pcm16'},stream:true,messages:[{role:'user',content:`Read this sentence clearly and warmly for a five-year-old English learner. Say only the sentence: ${text}`}]}),
   });
   const raw = await response.text();
   if (!response.ok) throw new Error(`OpenRouter returned ${response.status}: ${raw.slice(0,300)}`);
@@ -20,7 +20,7 @@ async function tts(text) {
     try{const item=JSON.parse(line.slice(5).trim());const audio=item?.choices?.[0]?.delta?.audio?.data||item?.choices?.[0]?.message?.audio?.data;if(audio)chunks.push(Buffer.from(audio,'base64'))}catch{}
   }
   if(!chunks.length) throw new Error('OpenRouter response did not contain audio');
-  return Buffer.concat(chunks);
+  const pcm=Buffer.concat(chunks);const wav=Buffer.alloc(44+pcm.length);wav.write('RIFF',0);wav.writeUInt32LE(36+pcm.length,4);wav.write('WAVE',8);wav.write('fmt ',12);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(24000,24);wav.writeUInt32LE(48000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(pcm.length,40);pcm.copy(wav,44);return wav;
 }
 
 createServer(async (req,res)=>{
