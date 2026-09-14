@@ -1,0 +1,2 @@
+import React,{useState} from 'react';
+export default function SequenceCards({cards=['wash','cut','pack'],onComplete}){const [order,setOrder]=useState([]);const pick=i=>{if(order.includes(i))return;const next=[...order,i];setOrder(next);if(next.length===cards.length)onComplete?.(next)};return <div className="sequence-cards"><p>First / Then / Finally</p><div>{cards.map((c,i)=><button key={c} className={order.includes(i)?'selected':''} onClick={()=>pick(i)}><strong>{order.indexOf(i)+1||'·'}</strong>{c}</button>)}</div></div>}

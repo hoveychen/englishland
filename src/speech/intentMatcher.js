@@ -1,0 +1,2 @@
+const normalize=s=>s.toLowerCase().replace(/[.,!?]/g,' ').replace(/\s+/g,' ').trim();
+export function matchIntent(text,levels={basic:[],target:[],challenge:[]}){const t=normalize(text);for(const level of ['challenge','target','basic']){const terms=levels[level]||[];if(terms.some(x=>{const n=normalize(x);return t.includes(n)||n.split(' ').every(w=>t.includes(w))}))return level}return t?'unknown':'unknown'}
