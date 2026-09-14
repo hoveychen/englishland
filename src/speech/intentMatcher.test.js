@@ -1,0 +1,3 @@
+import {matchIntent} from './intentMatcher.js';
+const cases=[['apple',{basic:['apple']},'basic'],['Let us take an apple',{target:['take an apple']},'target'],['because it is raining',{challenge:['because it is raining']},'challenge'],['我想要 apple',{basic:['apple']},'basic'],['try it',{target:['try']},'target'],['under chair',{target:['under chair']},'target'],['blue coat please',{basic:['blue coat']},'basic'],['hello',{target:['umbrella']},'unknown']];
+for(const [text,levels,want] of cases){const got=matchIntent(text,levels);if(got!==want)throw Error(`${text}: ${got} != ${want}`)} console.log(`intentMatcher: ${cases.length} samples passed`);
