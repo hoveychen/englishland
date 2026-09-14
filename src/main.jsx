@@ -5,12 +5,26 @@ import './style.css';
 
 const scenes=[
  {id:'picnic',title:'准备野餐',subtitle:'A picnic for Teddy',icon:'🧺',color:'tomato',description:'帮小熊准备一场下雨天也不怕的野餐。',beats:[
-  {id:'bring',prompt:'What should we bring?',zh:'我们应该带什么？',objects:[['🍎','an apple'],['🥤','a cup'],['🧺','a blanket']],target:['apple','杯','cup','苹果'],success:'Let’s take an apple!'},
-  {id:'why',prompt:'Why do we need an umbrella?',zh:'我们为什么需要雨伞？',objects:[['☂️','an umbrella'],['🧸','a teddy'],['🧢','a cap']],target:['rain','raining','umbrella','下雨'],success:'We need an umbrella because it is raining.'},
-  {id:'order',prompt:'What do we do first?',zh:'我们先做什么？',objects:[['🚿','wash the apple'],['🔪','cut the apple'],['🧺','pack the basket']],target:['wash','洗'],success:'First we wash the apple, then we cut it.'}
+  {id:'bring',prompt:'What should we bring?',zh:'我们应该带什么？',objects:[['🍎','an apple'],['🥤','a cup'],['🧺','a blanket']],target:['apple','杯','cup','苹果'],success:'Let’s take an apple!',level:'target'},
+  {id:'pack',prompt:'What else should we pack?',zh:'我们还要装什么？',objects:[['🍌','a banana'],['🍽️','a plate'],['🧸','a teddy']],target:['banana','plate','香蕉','盘子'],success:'Let’s take a banana and a plate.',level:'target'},
+  {id:'why',prompt:'Why do we need an umbrella?',zh:'我们为什么需要雨伞？',objects:[['☂️','an umbrella'],['🧸','a teddy'],['🧢','a cap']],target:['rain','raining','umbrella','下雨'],success:'We need an umbrella because it is raining.',level:'challenge'},
+  {id:'order',prompt:'What do we do first?',zh:'我们先做什么？',objects:[['🚿','wash the apple'],['🔪','cut the apple'],['🧺','pack the basket']],target:['wash','洗'],success:'First we wash the apple, then we cut it.',level:'challenge',sequence:['🚿','🔪','🧺']},
+  {id:'predict',prompt:'The clouds are dark. What should we do?',zh:'乌云来了，我们该怎么办？',objects:[['☂️','open the umbrella'],['🏠','go home'],['☀️','wait for sunshine']],target:['umbrella','home','rain','雨伞','回家'],success:'I think we should open the umbrella.',level:'challenge'}
  ]},
- {id:'clothes',title:'小熊的衣服',subtitle:'Getting dressed',icon:'🧥',color:'blue',description:'根据天气帮小熊选一套合适的衣服。',beats:[{id:'wear',prompt:'What are you going to wear?',zh:'你准备穿什么？',objects:[['🧥','a coat'],['👕','a T-shirt'],['🥾','boots']],target:['coat','jacket','外套'],success:'I am going to wear a coat.'}]},
- {id:'ball',title:'球去了哪里',subtitle:'Where is the ball?',icon:'⚽',color:'green',description:'听声音、看线索，找到藏起来的球。',beats:[{id:'where',prompt:'Where did the ball go?',zh:'球去哪儿了？',objects:[['🪑','under the chair'],['📦','in the box'],['🚪','behind the door']],target:['under','chair','椅子','下面'],success:'I think it is under the chair.'}]}
+ {id:'clothes',title:'小熊的衣服',subtitle:'Getting dressed',icon:'🧥',color:'blue',description:'根据天气帮小熊选一套合适的衣服。',beats:[
+  {id:'weather',prompt:'How is the weather today?',zh:'今天天气怎么样？',objects:[['☀️','sunny'],['🌧️','rainy'],['❄️','snowy']],target:['rain','rainy','下雨'],success:'It is rainy today.',level:'target'},
+  {id:'wear',prompt:'What are you going to wear?',zh:'你准备穿什么？',objects:[['🧥','a coat'],['👕','a T-shirt'],['🥾','boots']],target:['coat','jacket','外套'],success:'I am going to wear a coat.',level:'target'},
+  {id:'size',prompt:'Is this coat too big or too small?',zh:'这件外套太大还是太小？',objects:[['📏','too big'],['🔹','too small'],['✅','just right']],target:['big','large','大'],success:'This coat is too big.',level:'target'},
+  {id:'try',prompt:'What can you say before trying it on?',zh:'试穿前可以怎么说？',objects:[['🙋','Can I try it on?'],['👋','Goodbye!'],['😴','I am sleepy.']],target:['try','试'],success:'Can I try it on?',level:'target'},
+  {id:'replace',prompt:'The red coat is too big. What is another idea?',zh:'红外套太大了，还有别的办法吗？',objects:[['🧥','a blue coat'],['🧣','a scarf'],['☂️','an umbrella']],target:['blue','scarf','蓝','围巾'],success:'Let’s try the blue coat instead.',level:'challenge'}
+ ]},
+ {id:'ball',title:'球去了哪里',subtitle:'Where is the ball?',icon:'⚽',color:'green',description:'听声音、看线索，找到藏起来的球。',beats:[
+  {id:'sound',prompt:'Listen! What did you hear?',zh:'听！你听到了什么？',objects:[['🔔','a bounce'],['🐶','a dog'],['🚪','a door']],target:['bounce','ball','弹'],success:'I heard the ball bounce.',level:'target'},
+  {id:'in',prompt:'Could the ball be in the box?',zh:'球会在盒子里吗？',objects:[['📦','in the box'],['🪑','under the chair'],['🛋️','on the sofa']],target:['in','box','盒子'],success:'I think it is in the box.',level:'target'},
+  {id:'under',prompt:'Where is the blue ball?',zh:'蓝色的球在哪里？',objects:[['🪑','under the chair'],['📦','in the box'],['🚪','behind the door']],target:['under','chair','椅子','下面'],success:'I think it is under the chair.',level:'target'},
+  {id:'behind',prompt:'I see a little red color. Where could it be?',zh:'我看到一点红色，它可能在哪里？',objects:[['🚪','behind the door'],['🛏️','next to the bed'],['🧸','behind Teddy']],target:['behind','door','门后'],success:'Maybe it is behind the door.',level:'challenge'},
+  {id:'retell',prompt:'How did we find the ball?',zh:'我们是怎么找到球的？',objects:[['👀','look and listen'],['🏃','run away'],['😴','take a nap']],target:['look','listen','first','then','看','听'],success:'First we listened, then we looked under the chair.',level:'challenge',sequence:['🔔','👀','🪑']}
+ ]}
 ];
 const fixedAudio={
  'What should we bring?':'/audio/picnic-bring-prompt.wav',
